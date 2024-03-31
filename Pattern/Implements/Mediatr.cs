@@ -1,8 +1,9 @@
-﻿using Pattern.Interfaces;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Pattern.Interfaces;
 using System.Collections.Concurrent;
 
 namespace Pattern.Implements;
-public class Mediatr(Func<Type, object> serviceResolver, ConcurrentDictionary<Type, Type> handlerDetails) : IMediatr
+public class Mediatr(IServiceProvider serviceProvider, ConcurrentDictionary<Type, Type> handlerDetails) : IMediatr
 {
     public async Task<TResponse> SendAsync<TResponse>(IRequest<TResponse> command)
     {
@@ -12,11 +13,11 @@ public class Mediatr(Func<Type, object> serviceResolver, ConcurrentDictionary<Ty
 
         handlerDetails.TryGetValue(requestType, out var requestHandlerType);
 
-        var handler = serviceResolver.Invoke(requestHandlerType!);
+        var handlerImplement = serviceProvider.GetRequiredService(requestHandlerType!);
 
-        return await (Task<TResponse>)handler.GetType()
+        return await (Task<TResponse>)handlerImplement.GetType()
                                              .GetMethod("Handler")!
-                                             .Invoke(handler, new object[] { command })!;
+                                             .Invoke(handlerImplement, new object[] { command })!;
 
     }
 }

@@ -11,7 +11,7 @@ public static class ConfigureMediator
     public static IServiceCollection AddCustomMediatr(this IServiceCollection services, ServiceLifetime serviceLifetime, params Assembly[] assemblies)
     {
         var handlerInfo = new ConcurrentDictionary<Type, Type>();
-        var interfaceName = typeof(IRequestHandler<,>).Name;
+        var interfaceName =  typeof(IRequestHandler<,>).Name;
 
         foreach (var assembly in assemblies)
         {
@@ -37,7 +37,7 @@ public static class ConfigureMediator
 
         }
 
-        services.AddSingleton<IMediatr>(x => new Mediatr(x.GetRequiredService, handlerInfo));
+        services.AddSingleton<IMediatr>(x => new Mediatr(x, handlerInfo));
 
         return services;
     }
