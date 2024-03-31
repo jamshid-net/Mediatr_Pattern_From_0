@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Pattern.Interfaces;
+using System;
 using System.Collections.Concurrent;
 
 namespace Pattern.Implements;

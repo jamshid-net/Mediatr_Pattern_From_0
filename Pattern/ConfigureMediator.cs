@@ -37,7 +37,7 @@ public static class ConfigureMediator
 
         }
 
-        services.AddSingleton<IMediatr>(x => new Mediatr(x, handlerInfo));
+        services.AddSingleton<IMediatr>(serviceProvider => new Mediatr(serviceProvider, handlerInfo));
 
         return services;
     }
