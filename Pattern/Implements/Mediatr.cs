@@ -8,7 +8,7 @@ public class Mediatr(Func<Type, object> serviceResolver, ConcurrentDictionary<Ty
     {
         var requestType = command.GetType();
 
-        if (!handlerDetails.ContainsKey(requestType)) throw new Exception($"This exception throw by {requestType}");
+        if (!handlerDetails.ContainsKey(requestType)) throw new Exception($"This exception throw by {requestType.Name}");
 
         handlerDetails.TryGetValue(requestType, out var requestHandlerType);
 
