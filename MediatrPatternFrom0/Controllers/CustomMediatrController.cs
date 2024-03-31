@@ -1,5 +1,4 @@
 ﻿using MediatrPatternFrom0.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Pattern.Interfaces;
 

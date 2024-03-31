@@ -54,6 +54,18 @@ public static class ConfigureMediator
         }).ToList();
     }
 
+    private static List<Type> GetClassesImplementNotGeneric(Assembly assembly, Type typetoMatch)
+    {
+        return assembly.ExportedTypes.Where(type =>
+        {
+            var implementRequestType = type.GetInterfaces()
+                                           .Where(x => x.IsTypeDefinition && !x.IsGenericType && x == typetoMatch)
+                                           .ToArray();
+
+            return !type.IsInterface && !type.IsAbstract && implementRequestType.Length != 0;
+        }).ToList();
+    }
+
     #region Singleton_Scoped_Transient
     public static IServiceCollection AddCustomMediatrSingleton(this IServiceCollection services, params Assembly[] assemblies)
        => services.AddCustomMediatr(ServiceLifetime.Singleton, assemblies);
