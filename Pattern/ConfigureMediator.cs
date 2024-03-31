@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Pattern.Implements;
 using Pattern.Interfaces;
@@ -16,16 +15,16 @@ public static class ConfigureMediator
 
         foreach (var assembly in assemblies)
         {
-            
+
             var irequests = GetClassesImplement(assembly, typeof(IRequest<>));
             var irequestHandlers = GetClassesImplement(assembly, typeof(IRequestHandler<,>));
-           
+
 
             irequests.ForEach(request =>
             {
                 irequestHandlers.ForEach(handler =>
                 {
-                    if(handler.GetInterface(interfaceName)!.GetGenericArguments().First() == request)
+                    if (handler.GetInterface(interfaceName)!.GetGenericArguments().First() == request)
                     {
                         handlerInfo[request] = handler;
                     }
@@ -33,24 +32,15 @@ public static class ConfigureMediator
             });
 
             var serviceDescriptor = irequestHandlers.Select(x => new ServiceDescriptor(x, x, serviceLifetime));
-        
+
             services.TryAdd(serviceDescriptor);
-           
+
         }
-       
+
         services.AddSingleton<IMediatr>(x => new Mediatr(x.GetRequiredService, handlerInfo));
 
         return services;
     }
-
-    public static IServiceCollection AddCustomMediatrSingleton(this IServiceCollection services, params Assembly[] assemblies)
-        => services.AddCustomMediatr(ServiceLifetime.Singleton, assemblies);
-
-    public static IServiceCollection AddCustomMediatrScoped(this IServiceCollection services, params Assembly[] assemblies)
-       => services.AddCustomMediatr(ServiceLifetime.Scoped, assemblies);
-
-    public static IServiceCollection AddCustomMediatrTransient(this IServiceCollection services, params Assembly[] assemblies)
-       => services.AddCustomMediatr(ServiceLifetime.Transient, assemblies);
 
     private static List<Type> GetClassesImplement(Assembly assembly, Type typetoMatch)
     {
@@ -63,4 +53,15 @@ public static class ConfigureMediator
             return !type.IsInterface && !type.IsAbstract && implementRequestType.Length != 0;
         }).ToList();
     }
+
+    #region Singleton_Scoped_Transient
+    public static IServiceCollection AddCustomMediatrSingleton(this IServiceCollection services, params Assembly[] assemblies)
+       => services.AddCustomMediatr(ServiceLifetime.Singleton, assemblies);
+
+    public static IServiceCollection AddCustomMediatrScoped(this IServiceCollection services, params Assembly[] assemblies)
+       => services.AddCustomMediatr(ServiceLifetime.Scoped, assemblies);
+
+    public static IServiceCollection AddCustomMediatrTransient(this IServiceCollection services, params Assembly[] assemblies)
+       => services.AddCustomMediatr(ServiceLifetime.Transient, assemblies);
+    #endregion
 }

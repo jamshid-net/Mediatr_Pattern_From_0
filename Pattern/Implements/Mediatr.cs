@@ -14,7 +14,9 @@ public class Mediatr(Func<Type, object> serviceResolver, ConcurrentDictionary<Ty
 
         var handler = serviceResolver.Invoke(requestHandlerType!);
 
-        return await (Task<TResponse>)handler.GetType().GetMethod("Handler")!.Invoke(handler, new object[] { command })!;
+        return await (Task<TResponse>)handler.GetType()
+                                             .GetMethod("Handler")!
+                                             .Invoke(handler, new object[] { command })!;
 
     }
 }

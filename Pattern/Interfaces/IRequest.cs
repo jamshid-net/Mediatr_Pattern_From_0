@@ -1,4 +1,3 @@
 ﻿namespace Pattern.Interfaces;
-public interface IRequest<out T>
-{
-}
+public interface IRequest<out T>;
+
