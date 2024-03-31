@@ -1,3 +1,4 @@
+using MediatrPatternFrom0.RepositoryPattern;
 using Pattern;
 
 using System.Reflection;
@@ -14,6 +15,8 @@ public class Program
         
 
         builder.Services.AddCustomMediatrSingleton(Assembly.GetExecutingAssembly());
+
+        builder.Services.AddSingleton<IRepository, Repository>();
 
         builder.Services.AddControllers();
         
